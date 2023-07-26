@@ -28,13 +28,25 @@ jobs:
       - name: e2e tests
         uses: cypress-io/github-action@v5
         with:
-            command: npm run test:e2e
-            start: npm run start-prod
-            wait-on: http://localhost:5000
+          command: npm run test:e2e
+          start: npm run start-prod
+          wait-on: http://localhost:5000
       - name: Deploy to production
         if: ${{ github.event_name == 'push' }}
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
           service-id: ${{ secrets.RENDER_ID }}
           api-key: ${{ secrets.RENDER_TOKEN }}
+          
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }}
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          
 

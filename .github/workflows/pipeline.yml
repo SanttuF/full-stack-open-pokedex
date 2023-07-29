@@ -52,7 +52,7 @@ jobs:
           severity: error
           ebhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           text: "Build failed" 
-           
+
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04

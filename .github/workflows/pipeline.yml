@@ -53,7 +53,8 @@ jobs:
           severity: error
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           text: "Build failed" 
-
+          
+          
   tag_release:
     needs: [simple_deployment_pipeline]
     if: ${{!contains(join( toJson(github.event.commits.*.message) ), '#skip')}}

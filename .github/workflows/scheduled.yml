@@ -1,9 +1,8 @@
 name: Deployment pipeline
 
 on:
-  push:
-    branches:
-      - new
+  schedule:
+    - cron: '5 * * * *'
       
       
 jobs: 

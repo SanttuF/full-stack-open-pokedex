@@ -45,16 +45,18 @@ jobs:
           description: "https://fullstackopenpokedex.onrender.com/"
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           text: "New version"
+
       - name: Test Failure
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
           severity: error
-          ebhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           text: "Build failed" 
 
   tag_release:
     needs: [simple_deployment_pipeline]
+    if: ${{!contains(join( toJson(github.event.commits.*.message) ), '#skip')}}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3

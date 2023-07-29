@@ -37,6 +37,27 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_ID }}
           api-key: ${{ secrets.RENDER_TOKEN }}
+      
+          
+          
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    if: ${{!contains(join( toJson(github.event.commits.*.message) ), '#skip')}}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }}
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          
+  discord_notify:
+    needs: [simple_deployment_pipeline]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-20.04
+    steps:
       - name: Test Success
         uses: rjstone/discord-webhook-notify@v1
         if: success()
@@ -53,19 +74,5 @@ jobs:
           severity: error
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           text: "Build failed" 
-          
-          
-  tag_release:
-    needs: [simple_deployment_pipeline]
-    if: ${{!contains(join( toJson(github.event.commits.*.message) ), '#skip')}}
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' }}
-        uses: anothrNick/github-tag-action@1.67.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
           
 

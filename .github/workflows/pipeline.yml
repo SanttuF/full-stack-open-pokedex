@@ -37,7 +37,7 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_ID }}
           api-key: ${{ secrets.RENDER_TOKEN }}
-          
+  
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04

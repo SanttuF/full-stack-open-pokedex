@@ -37,7 +37,22 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_ID }}
           api-key: ${{ secrets.RENDER_TOKEN }}
-  
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          description: "https://fullstackopenpokedex.onrender.com/"
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          text: "New version"
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          ebhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          text: "Build failed" 
+           
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
